@@ -41,15 +41,16 @@ export default function Home() {
   const countries = ["India", "United States", "Canada", "Australia", "Germany"];
   const states = ["Maharashtra", "Delhi", "Karnataka", "Tamil Nadu", "Gujarat"];
 
-  const handleDateRange = (dateRange: { from: Date | null; to: Date | null } | null | undefined) => {
+  const handleDateRange = (dateRange: { from: Date | undefined; to?: Date | undefined } | undefined) => {
     if (dateRange) {
       setStartDate(dateRange.from || null);
-      setEndDate(dateRange.to || null);
+      setEndDate(dateRange.to || null);  // Will handle undefined gracefully
     } else {
       setStartDate(null);
       setEndDate(null);
     }
   };
+  
   
 
   return (
@@ -67,7 +68,7 @@ export default function Home() {
 
 
       <div className="flex flex-row">
-      
+
         <div className="relative">
           <Card className={`min-h-[53vh] w-[26vw] mt-5 ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
             <CardHeader>
@@ -113,42 +114,42 @@ export default function Home() {
             </div>
 
             <div className="flex items-center space-x-2">
-            <Switch
-              className={`${theme ? "bg-black text-white" : "bg-gray text-black"}`}
-              id="state-switch"
-              checked={isStateVisible}
-              onCheckedChange={setIsStateVisible} // Toggle visibility of state dropdown
-            />
-            <Label htmlFor="state-switch">State</Label>
-          </div>
-
-            
-          {/* Conditionally render the State Dropdown */}
-          {isStateVisible && (
-            <div className="mb-6">
-              <label className="block text-sm font-medium mb-2">
-                {selectedState ? `Selected State: ${selectedState}` : "Select State:"}
-              </label>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className={`w-full text-left p-2 border rounded-md ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
-                    {selectedState || "Select State"}
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>Choose a State</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-
-                  {states.map((state) => (
-                    <DropdownMenuItem key={state} onClick={() => setSelectedState(state)}>
-                      {state}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Switch
+                className={`${theme ? "bg-black text-white" : "bg-gray text-black"}`}
+                id="state-switch"
+                checked={isStateVisible}
+                onCheckedChange={setIsStateVisible} // Toggle visibility of state dropdown
+              />
+              <Label htmlFor="state-switch">State</Label>
             </div>
-          )}
+
+
+            {/* Conditionally render the State Dropdown */}
+            {isStateVisible && (
+              <div className="mb-6">
+                <label className="block text-sm font-medium mb-2">
+                  {selectedState ? `Selected State: ${selectedState}` : "Select State:"}
+                </label>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className={`w-full text-left p-2 border rounded-md ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
+                      {selectedState || "Select State"}
+                    </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent>
+                    <DropdownMenuLabel>Choose a State</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+
+                    {states.map((state) => (
+                      <DropdownMenuItem key={state} onClick={() => setSelectedState(state)}>
+                        {state}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
             {/* <div className="mb-6">
               <label className="block text-sm font-medium mb-2">
                 {selectedState ? `Selected State: ${selectedState}` : "Select State:"}
@@ -183,7 +184,11 @@ export default function Home() {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                  <Calendar mode="range" selected={{ from: startDate, to: endDate }} onSelect={handleDateRange} />
+                <Calendar
+                    mode="range"
+                    selected={{ from: startDate || undefined, to: endDate || undefined }}
+                    onSelect={handleDateRange}
+                  />
                 </PopoverContent>
               </Popover>
             </div>
@@ -198,7 +203,11 @@ export default function Home() {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                  <Calendar mode="range" selected={{ from: startDate, to: endDate }} onSelect={handleDateRange} />
+                  <Calendar
+                    mode="range"
+                    selected={{ from: startDate || undefined, to: endDate || undefined }}
+                    onSelect={handleDateRange}
+                  />
                 </PopoverContent>
               </Popover>
             </div>
