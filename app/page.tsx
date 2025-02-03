@@ -1,101 +1,217 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [theme, setTheme] = useState(false); // For dark/light theme
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedState, setSelectedState] = useState<string | null>(null);
+  const [isStateVisible, setIsStateVisible] = useState(false); // State for controlling state dropdown visibility
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+  const countries = ["India", "United States", "Canada", "Australia", "Germany"];
+  const states = ["Maharashtra", "Delhi", "Karnataka", "Tamil Nadu", "Gujarat"];
+
+  const handleDateRange = (dateRange: { from: Date | null; to: Date | null } | null | undefined) => {
+    if (dateRange) {
+      setStartDate(dateRange.from || null);
+      setEndDate(dateRange.to || null);
+    } else {
+      setStartDate(null);
+      setEndDate(null);
+    }
+  };
+  
+
+  return (
+
+    <div className={`p-8 min-h-screen ${theme ? "bg-gray-700 text-white" : "bg-white text-black"}`}>
+      {/* Top bar */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-xl font-extrabold">AI BUILDER</h1>
+        {/* Toggle Theme Switch */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">{theme ? "Dark" : "Light"} Mode</span>
+          <Switch checked={theme} onCheckedChange={(checked) => setTheme(checked)} />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+
+
+      <div className="flex flex-row">
+      
+        <div className="relative">
+          <Card className={`min-h-[53vh] w-[26vw] mt-5 ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
+            <CardHeader>
+              <CardTitle className="text-center" >Privious Prompt</CardTitle>
+              <p >Content</p>
+            </CardHeader>
+          </Card>
+          <Card className={`min-h-[23.5vh] w-[26vw] mt-3.5 ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
+            <CardHeader>
+              <CardTitle className="text-center">Recomondation</CardTitle>
+              <p>Content</p>
+            </CardHeader>
+          </Card>
+        </div>
+
+        <div className="flex flex-col w-[60vw] m-5">
+          {/* drop down */}
+          <div className=" flex justify-between">
+            {/* Dropdown Menu */}
+            <div className="mb-6   ">
+              <label className="block text-sm font-medium mb-2">
+                {selectedCountry ? `Selected Country: ${selectedCountry}` : "Select Country:"}
+              </label>
+
+              {/* Dropdown Menu */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={`text-left p-2 border rounded-md ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
+                    {selectedCountry || "Select Country"}
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Choose a Country</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem onClick={() => setSelectedCountry("India")}>India</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedCountry("Pakistan")}>Pakistan</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedCountry("China")}>China</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedCountry("Nepal")}>Nepal</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            <div className="flex items-center space-x-2">
+            <Switch
+              className={`${theme ? "bg-black text-white" : "bg-gray text-black"}`}
+              id="state-switch"
+              checked={isStateVisible}
+              onCheckedChange={setIsStateVisible} // Toggle visibility of state dropdown
+            />
+            <Label htmlFor="state-switch">State</Label>
+          </div>
+
+            
+          {/* Conditionally render the State Dropdown */}
+          {isStateVisible && (
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">
+                {selectedState ? `Selected State: ${selectedState}` : "Select State:"}
+              </label>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className={`w-full text-left p-2 border rounded-md ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
+                    {selectedState || "Select State"}
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Choose a State</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  {states.map((state) => (
+                    <DropdownMenuItem key={state} onClick={() => setSelectedState(state)}>
+                      {state}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
+            {/* <div className="mb-6">
+              <label className="block text-sm font-medium mb-2">
+                {selectedState ? `Selected State: ${selectedState}` : "Select State:"}
+              </label>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="w-full text-left p-2 border rounded-md">
+                    {selectedState || "Select Country"}
+                  </button>
+                </DropdownMenuTrigger>
+
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Choose a State</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  <DropdownMenuItem onClick={() => setSelectedState("Bihar")}>Bihar</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedState("Gujarat")}>Gujarat</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedState("Rajasthan")}>Rajasthan</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSelectedState("Maharashtra")}>Maharashtra</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div> */}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            {/* Start Date */}
+            <div>
+              <label className="block text-sm font-medium mb-2">Start Date:</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className={`w-full ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
+                    {startDate ? format(startDate, "dd/MM/yyyy") : "Select Start Date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar mode="range" selected={{ from: startDate, to: endDate }} onSelect={handleDateRange} />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* End Date */}
+            <div>
+              <label className="block text-sm font-medium mb-2">End Date:</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className={`w-full ${theme ? "bg-gray text-white" : "bg-white text-black"}`}>
+                    {endDate ? format(endDate, "dd/MM/yyyy") : "Select End Date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <Calendar mode="range" selected={{ from: startDate, to: endDate }} onSelect={handleDateRange} />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+          {/* Textarea for Prompt */}
+          <div className="mb-10 mr-6px absolute bottom-0 w-[60%]">
+            <label htmlFor="prompt" className="block text-sm font-medium mb-2">
+              Enter your prompt:
+            </label>
+            <Textarea id="prompt" placeholder="Type your prompt here..." className={`w-full h-40 ${theme ? "bg-gray-700 text-white" : "bg-white text-black"}`} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
