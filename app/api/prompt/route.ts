@@ -5,7 +5,6 @@ import Prompt from "@/model/recommendation";
 
 export  async function POST(req:Request){
        try{
-        // mongoodse connection check await db.connect()
            const {country ,state,userQuery} = await req.json();
            const prompt = await Prompt.create({country,state,userQuery})
                return NextResponse.json({message:"prompt created", prompt}, { status: 201 })

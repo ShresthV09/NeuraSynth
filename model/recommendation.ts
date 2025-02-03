@@ -1,22 +1,24 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const promptSchema = new mongoose.Schema({
-  country:{
-    type:String,
-    required:true,
+const promptSchema = new mongoose.Schema(
+  {
+    country: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+    },
+    userQuery: {
+      type: String,
+      required: true,
+    },
+    createdAt: { type: Date, default: Date.now },
   },
-  state:{
-    type:String,
-  },
-  userQuery:{
-    type:String,
-    required:true,
-  },
-  createdAt: { type: Date, default: Date.now }
-
-},
-{timestamps:true},
-)
+  { timestamps: true }
+);
 
 
-export default mongoose.models.recommendation || mongoose.model("Prompt",promptSchema);
+const Prompt = mongoose.models.Prompt || mongoose.model("Prompt", promptSchema);
+
+export default Prompt;
