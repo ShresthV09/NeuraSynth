@@ -1,5 +1,4 @@
 import { NextApiRequest,NextApiResponse } from "next";
-// import {} from @/lib/connectdb
 import { NextResponse } from "next/server";
 import Prompt from "@/model/recommendation";
 
